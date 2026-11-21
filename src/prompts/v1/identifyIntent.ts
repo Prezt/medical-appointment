@@ -44,11 +44,11 @@ export const getSystemPrompt = (professionals: any[]) => {
     examples: [
       {
         input: 'I want to schedule with Dr. Alicio da Silva for tomorrow at 4pm for a check-up',
-        output: { intent: 'schedule', professionalId: 1, professionalName: 'Dr. Alicio da Silva', datetime: '2026-02-12T16:00:00.000Z', reason: 'check-up' }
+        output: { intent: 'schedule', professionalId: 1, professionalName: 'Dr. Alicio da Silva', datetime: new Date(new Date(Date.now() + 864e5).setHours(16, 0, 0, 0)).toISOString(), reason: 'check-up' }
       },
       {
         input: 'Cancel my appointment with Dr. Ana Pereira today at 11am',
-        output: { intent: 'cancel', professionalId: 2, professionalName: 'Dr. Ana Pereira', datetime: '2026-02-11T11:00:00.000Z' }
+        output: { intent: 'cancel', professionalId: 2, professionalName: 'Dr. Ana Pereira', datetime: new Date(new Date().setHours(11, 0, 0, 0)).toISOString() }
       },
       {
         input: 'What is the weather today?',

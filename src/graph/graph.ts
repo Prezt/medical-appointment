@@ -40,7 +40,6 @@ export type GraphState = z.infer<typeof AppointmentStateAnnotation>;
 
 export function buildAppointmentGraph(llmClient: OpenRouterService, appointmentService: AppointmentService) {
 
-
   // Build workflow graph
   const workflow = new StateGraph({
     stateSchema: AppointmentStateAnnotation,
