@@ -4,7 +4,9 @@ export const IntentSchema = z.object({
   intent: z.enum(['schedule', 'cancel', 'unknown']).describe('The user intent'),
   professionalId: z.number().optional().describe('ID of the medical professional'),
   professionalName: z.string().optional().describe('Name of the medical professional'),
-  datetime: z.string().optional().describe('Appointment date and time in ISO format'),
+  datetime: z.string().optional().describe('Resolve relative dates (today, tomorrow) using current_date as reference. ' +
+    'Keep the exact hour the user said (e.g. "19h" → 19:00:00). ' +
+    'Local date and time exactly as the user said it, format YYYY-MM-DDTHH:mm:ss. No "Z", no UTC offset.'),
   patientName: z.string().optional().describe('Patient name extracted from question'),
   reason: z.string().optional().describe('Reason for appointment (for scheduling)'),
 });
@@ -37,7 +39,9 @@ export const getSystemPrompt = (professionals: any[]) => {
     extraction_instructions: {
       professionalId: 'Match the professional name mentioned in the question to the ID from the professionals list. Use fuzzy matching.',
       professionalName: 'Extract the professional name as mentioned by the user',
-      datetime: 'Parse relative dates (today, tomorrow) and times. Convert to ISO format. Use current_date as reference.',
+      datetime: 'Resolve relative dates (today, tomorrow) using current_date as reference. ' +
+            'Keep the exact hour the user said (e.g. "19h" → 19:00:00). ' +
+            'Output format YYYY-MM-DDTHH:mm:ss. Do NOT convert to UTC and do NOT add "Z" or an offset.',
       patientName: 'Extract the patient name from the question or context',
       reason: 'Extract the reason/purpose for the appointment (only for scheduling)'
     },
@@ -64,7 +68,7 @@ export const getUserPromptTemplate = (question: string) => {
     instructions: [
       'Carefully analyze the question to determine the user intent',
       'Extract all relevant appointment details',
-      'Convert dates and times to ISO format',
+      'Keep dates and times in local time as said by the user (format YYYY-MM-DDTHH:mm:ss, no "Z", no offset)',
       'Match professional names to their IDs',
       'Return only the fields that are present in the question'
     ]

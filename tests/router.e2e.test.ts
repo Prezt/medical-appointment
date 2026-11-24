@@ -19,7 +19,7 @@ describe('Medical Appointment System - E2E Tests', async () => {
 
     it('Schedule appointment - Success', async () => {
         const response = await makeARequest(
-            `Olá, sou Maria Santos e quero agendar uma consulta com ${professionals.at(0)?.name} Dr. Alicio da Silva para amanhã às 16h para um check-up regular`
+            `Olá, sou Maria Santos e quero agendar uma consulta com ${professionals.at(0)?.name} para amanhã às 16h para um check-up regular`
         )
 
         console.log('Schedule Success Response:', response.body);
@@ -47,5 +47,29 @@ describe('Medical Appointment System - E2E Tests', async () => {
         const body = JSON.parse(response.body);
         assert.equal(body.intent, 'cancel');
         assert.equal(body.actionSuccess, true);
+    });
+
+    it('Should fail to Schedule two appointments on the same day - Fail', async () => {
+        const response1 = await makeARequest(
+            `Olá, sou Maria Santos e quero agendar uma consulta com ${professionals.at(0)?.name} para amanhã às 19h para um check-up regular`
+        )
+
+        console.log('Schedule Success Response:', response1.body);
+
+        assert.equal(response1.statusCode, 200);
+        const body1 = JSON.parse(response1.body);
+        assert.equal(body1.intent, 'schedule');
+        assert.equal(body1.actionSuccess, true);
+
+        const response2 = await makeARequest(
+            `Olá, sou Joao de Abreu e quero agendar uma consulta com ${professionals.at(0)?.name} para amanhã às 19h para um check-up regular`
+        )
+
+        console.log('Schedule Fail Response:', response2.body);
+
+        assert.equal(response2.statusCode, 200);
+        const body2 = JSON.parse(response2.body);
+        assert.equal(body2.intent, 'schedule');
+        assert.equal(body2.actionSuccess, false);
     });
 });

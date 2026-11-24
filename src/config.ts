@@ -32,5 +32,5 @@ export const config: ModelConfig = {
       partition: 'none',
     },
   },
-  temperature: 0.7,
+  temperature: 0,
 };
